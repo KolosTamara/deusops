@@ -1,0 +1,4 @@
+roles:
+  - src: git+https://gitlab.com/devops1305151/docker-role.git
+    version: main
+    name: docker
