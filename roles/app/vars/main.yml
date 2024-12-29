@@ -1,7 +1,0 @@
-#SPDX-License-Identifier: MIT-0
----
-# vars file for app
-repo_url: "https://github.com/mdn/django-locallibrary-tutorial.git"
-app_dir: "/django/locallib-app"
-virtualenv_dir: "/django/locallib-app/venv"
-python_bin: "/usr/bin/python3"

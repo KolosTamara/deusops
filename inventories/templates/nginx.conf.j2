@@ -1,0 +1,11 @@
+server {
+    server_name "{{ nginx_template_server_name }}";
+
+    location /static/ {
+      alias "{{ nginx_static_location }}";
+    }
+
+    location / {
+      proxy_pass "{{ nginx_django_pass }}";  
+    }
+}

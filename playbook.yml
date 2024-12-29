@@ -1,10 +1,43 @@
 ---
-- hosts: all
+- name: Install Nginx
+  hosts: "web" 
   become: true
-
   roles:
-      - docker
-      - app
+    - nginx
+
+  tasks:
+  - name: Clone GitHub repository for static files
+    ansible.builtin.git:
+      repo: "{{nginx_static_files_repo_src}}"
+      dest: "{{nginx_static_files_repo_dest}}"
+      version: main
+
+- name: Install Docker
+  hosts: "app"  
+  become: true
+  roles:
+    - docker
+
+  tasks: 
+    - name: Run Docker container
+      docker_container:
+        name: django-app
+        image: timurbabs/django:latest
+        state: started
+        ports:
+        - "8000:8000"
+
+    - name: Check app running
+      uri:
+        url: "http://158.160.87.26/"
+        status_code: 200
+        return_content: yes
+      register: response
+
+    - debug:
+        var: response.content
+
+
 
 
 
