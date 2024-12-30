@@ -1,0 +1,58 @@
+easy_rsa_dir: "{{ ansible_env.HOME }}/easy-rsa" 
+easy_rsa_binary: "/usr/share/easy-rsa" 
+
+openvpn_server_common_name: "server" 
+openvpn_dir: "/etc/openvpn/server" 
+openvpn_server_template: "openvpn-server.conf.j2" 
+
+openvpn_server_vars_ca: ca.crt  
+openvpn_server_vars_cert: "{{ openvpn_server_common_name }}.crt"  
+openvpn_server_vars_key: "{{ openvpn_server_common_name }}.key"  
+openvpn_server_vars_port: 1194 
+openvpn_server_vars_proto: udp  
+openvpn_server_vars_tls_crypt: ta.key 
+openvpn_server_vars_cipher: |  
+    cipher AES-256-GCM
+    auth SHA256
+openvpn_server_vars_dh: none  
+openvpn_server_vars_user: nobody 
+openvpn_server_vars_group: nogroup 
+
+openvpn_server_vars_network: "10.8.0.0"  
+openvpn_server_vars_netmask: "255.255.255.0"  
+
+openvpn_push_route1_network: "192.168.10.0"  
+openvpn_push_route1_netmask: "255.255.255.0"  
+
+openvpn_push_route2_network: "192.168.20.0"  
+openvpn_push_route2_netmask: "255.255.255.0" 
+
+openvpn_bridge_server_ip: "10.8.0.4"  
+openvpn_bridge_netmask: "255.255.255.0" 
+openvpn_bridge_pool_start: "10.8.0.50"  
+openvpn_bridge_pool_end: "10.8.0.100"  
+
+openvpn_dns1: "208.67.222.222" 
+openvpn_dns2: "208.67.220.220"
+
+openvpn_route_network: "10.9.0.0"  
+openvpn_route_netmask: "255.255.255.252"
+
+
+openvpn_client_common_name: "client1"
+client_configs_dir: "{{ ansible_env.HOME }}/client-configs" 
+openvpn_client_template: "openvpn-client.conf.j2"
+openvpn_client_vars_ca: ca.crt  
+openvpn_client_vars_cert: "{{ openvpn_client_common_name }}.crt"  
+openvpn_client_vars_key: "{{ openvpn_client_common_name }}.key"  
+openvpn_client_vars_remote: "{{ ansible_default_ipv4.address }}"  
+openvpn_client_vars_remote_port: 1194   
+openvpn_client_vars_proto: udp    
+openvpn_client_vars_cipher: |  
+    cipher AES-256-GCM
+    auth SHA256
+openvpn_client_vars_extra: |  
+    key-direction 1
+    script-security 2
+    up /etc/openvpn/update-resolv-conf
+    down /etc/openvpn/update-resolv-conf

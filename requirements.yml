@@ -1,9 +1,4 @@
 roles:
-  - src: git+https://gitlab.com/devops1305151/docker-role.git
+  - src: git+https://gitlab.com/devops1305151/openvpn-role.git
     version: main
-    name: docker
-
-roles:
-  - src: git+https://gitlab.com/devops1305151/nginx-role.git
-    version: main
-    name: nginx   
+    name: open_vpn
