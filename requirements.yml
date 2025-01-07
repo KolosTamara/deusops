@@ -1,4 +1,4 @@
 roles:
-  - src: git+https://gitlab.com/devops1305151/openvpn-role.git
+  - src: git+https://gitlab.com/devops1305151/postgres-role.git
     version: main
-    name: open_vpn
+    name: postgres

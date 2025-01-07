@@ -1,5 +1,6 @@
 ---
-- name: Run OpenVPN
-  hosts: "vpn_server"
+- name: Setup db
+  hosts: "db"
+  become: true
   roles: 
-    - open_vpn
+    - postgres
