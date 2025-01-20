@@ -1,0 +1,121 @@
+---
+grafana_version: 11.4.0
+
+grafana_deb_pkg_url: "https://dl.grafana.com/oss/release/grafana_{{ grafana_version }}_amd64.deb"
+
+grafana_service:
+  name: grafana-server.service
+  enabled: yes
+  daemon_reload: yes
+
+grafana_url: "http://{{ granafa_config.http_addr }}:{{ granafa_config.http_port }}"
+grafana_api_url: "{{ grafana_url }}"
+
+grafana_config_file:
+  template: templates/grafana.ini.j2
+  path: /etc/grafana/grafana.ini
+
+granafa_config: 
+  http_addr: 0.0.0.0
+  http_port: 3000
+  users:
+    allow_sign_up: false
+  auth_anonymous:
+    enabled: false
+
+grafana_security:
+  admin_user: admin
+  admin_password: admin
+
+grafana_dashboards_dir: dashboards
+grafana_dashboards:
+  - dashboard_id: 3662
+    revision_id: 1
+    datasource: prometheus
+  - dashboard_id: 6671
+    revision_id: 1
+    datasource: prometheus  
+
+grafana_datasources:
+  - name: prometheus
+    url: http://51.250.16.150:9090
+    type: prometheus
+
+  - name: loki
+    url: http://51.250.16.150:3100
+    type: loki
+    
+prometheus_version: 2.41.0
+prometheus_user_id: toma
+
+prometheus_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+prometheus_pkg_path: "/home/{{ prometheus_user_id }}/"
+prometheus_pkg_path_with_pkg_name: "{{ prometheus_pkg_path }}/prometheus-{{ prometheus_version }}.linux-amd64"
+
+prometheus_config_dir: /etc/prometheus
+prometheus_lib_dir: /var/lib/prometheus
+prometheus_bin_dir: /usr/local/bin/
+
+prometheus_dirs:
+  - "{{ prometheus_config_dir }}"
+  - "{{ prometheus_lib_dir }}"
+
+prometheus_files_to_move:
+  - { src: "{{ prometheus_pkg_path_with_pkg_name }}/prometheus", dest: "{{ prometheus_bin_dir }}" }
+  - { src: "{{ prometheus_pkg_path_with_pkg_name }}/promtool", dest: "{{ prometheus_bin_dir }}"}
+  - { src: "{{ prometheus_pkg_path_with_pkg_name }}/consoles/", dest: "{{ prometheus_config_dir }}/" }
+  - { src: "{{ prometheus_pkg_path_with_pkg_name }}/console_libraries/", dest: "{{ prometheus_config_dir }}/" }
+
+prometheus_config:
+  template: templates/prometheus.yml.j2
+  path: "{{ prometheus_config_dir }}/prometheus.yml"
+
+prometheus_group: prometheus
+prometheus_user: 
+  name: prometheus
+  shell: /sbin/nologin
+
+prometheus_systemd:
+  template: templates/prometheus.service.j2
+  name: prometheus.service
+  path: /etc/systemd/system/prometheus.service
+  enabled: yes
+  listen_address: 0.0.0.0:9090
+
+prometheus_static_configs:
+  targets: ["51.250.16.150:9090"] 
+
+prometheus_scrape_configs:
+    - job_name: "application"
+      static_configs:
+        - targets: ["158.160.87.26:8080"]  
+
+loki_version: 3.2.0
+
+loki_temp_dir: /home/vagrant/lokiDir
+loki_etc_dir: /etc/loki
+
+loki_bin:
+  url: "https://github.com/grafana/loki/releases/download/v{{ loki_version}}/loki-linux-amd64.zip"
+  file: loki-linux-amd64
+  dir: /usr/local/bin
+
+loki_config:
+  url: "https://raw.githubusercontent.com/grafana/loki/v{{ loki_version}}/cmd/loki/loki-local-config.yaml"
+  file: loki-local-config.yaml
+
+loki_group: loki
+loki_user:
+  name: loki
+  shell: /bin/false
+
+loki_service:
+  name: loki.service
+  template_path: templates/loki.service.j2
+  enabled: true
+  daemon_reload: true
+
+
+
+
+

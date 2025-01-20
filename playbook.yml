@@ -1,6 +1,31 @@
 ---
-- name: Setup db
-  hosts: "db"
+- name: Setup Application
+  hosts: app
   become: true
-  roles: 
-    - postgres
+
+  roles:
+    - docker
+
+  post_tasks: 
+  - name: Start Docker on Boot
+    systemd:
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: Run Application for Monitoring
+    docker_container:
+      name: demo-app
+      image: quay.io/brancz/prometheus-example-app:v0.3.0
+      state: started
+      ports:
+        - "8080:8080"
+
+- name: Setup Monitoring
+  hosts: monitoring
+  become: true
+
+  roles:
+    - prometheus
+    - loki
+    - grafana

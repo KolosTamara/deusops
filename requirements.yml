@@ -1,4 +1,16 @@
 roles:
-  - src: git+https://gitlab.com/devops1305151/postgres-role.git
+  - src: git+https://gitlab.com/devops1305151/docker-role.git
     version: main
-    name: postgres
+    name: docker
+
+  - src: git+https://gitlab.com/devops1305151/prometheus-role.git
+    version: main
+    name: prometheus  
+
+  - src: git+https://gitlab.com/devops1305151/grafana-role.git
+    version: main
+    name: grafana   
+
+  - src: git+https://gitlab.com/devops1305151/loki-role.git
+    version: main
+    name: loki    
